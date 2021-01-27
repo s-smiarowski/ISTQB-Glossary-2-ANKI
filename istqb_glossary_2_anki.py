@@ -1,10 +1,3 @@
-### ISTQB Glossary to ANKI flashcards deck builder
-### Simple script for building Anki deck from ISTQB glossary page
-### It's scrapping page searching for terms in two langages, 
-### then building python deictionary from this data.
-### and Finaly creating  Anki deck for future easy memorizing the terms
-
-
 import webbrowser, sys, pyperclip, os, pprint, logging
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
@@ -53,5 +46,5 @@ print(str(len(glossary)) + 'results')
 
 ### Known issues:
 ### -script is finding only 237-238 terms from avaliable 239
-### -there are unnecesery new line sighns in desc_eng/desc_pl
+### -there are unnecesery new line escape sequences in desc_eng/desc_pl
 ### -waits should be changed
