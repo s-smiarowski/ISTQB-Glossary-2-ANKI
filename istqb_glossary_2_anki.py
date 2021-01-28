@@ -1,4 +1,4 @@
-import webbrowser, sys, pyperclip, os, pprint, logging
+import webbrowser, sys, pyperclip, os, pprint, logging, genanki
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -19,8 +19,8 @@ browser.implicitly_wait(3) # seconds https://selenium-python.readthedocs.io/wait
 
 glossary = []
 
-for j in range(1,13):
-    for i in range(3,23):
+for j in range(1,13): # 13
+    for i in range(3,23): # 23
         try:
             glossary.append({ # stworzenie listy slownikow
                 'term_eng': browser.find_element_by_css_selector(f"#app > div > div:nth-child(4) > div > div.search-results > div:nth-child({i}) > div.term-row > div > div.term-heading").text,
@@ -36,6 +36,54 @@ for j in range(1,13):
         logging.info("there are no more pages to click")
     # if j==1: browser.implicitly_wait(3)
     browser.implicitly_wait(3)
+
+
+genanki_model_istqb = genanki.Model(
+  4400040004,
+  'ISTQB FL',
+  fields=[
+    {'name': 'Question'},
+    {'name': 'Question_PL'},
+    {'name': 'Answer'},
+    {'name': 'Answer_PL'},
+  ],
+  templates=[
+    {
+      'name': 'Card 1',
+      'qfmt': '{{Question}}<br>-<br>{{Question_PL}}',
+      'afmt': '{{FrontSide}}<hr id="answer">{{Answer}}<br>-<br>{{Answer_PL}}',
+    },
+  ])
+
+genanki_deck_istqb = genanki.Deck(
+  4400040005,
+  'ISTQB FL')
+
+
+for i in glossary:
+    # logging.info("\n" + i['term_eng'] + "/" + i['term_pl'] + "\n" + i['desc_eng'] + " \n" + i['desc_pl'])
+    field1 = i['term_eng']
+    field2 = i['term_pl']
+    field3 = i['desc_eng'] # + " | " + i['desc_pl']
+    field4 = i['desc_pl']
+    my_note = genanki.Note(
+    model=genanki_model_istqb,
+    fields=[field1, field2, field3, field4])
+    genanki_deck_istqb.add_note(my_note)
+
+
+genanki.Package(genanki_deck_istqb).write_to_file('istqb_glossary.apkg')
+
+
+
+
+
+# dataList = [{'a': 1}, {'b': 3}, {'c': 5}]
+# for index in range(len(dataList)):
+#     for key in dataList[index]:
+#         print(dataList[index][key])
+
+
 
 # line = line.replace('\n','')
 browser.quit()
